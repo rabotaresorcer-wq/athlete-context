@@ -6,9 +6,10 @@ An AI system for connecting athlete performance data, competition information, o
 
 ## Current implementation
 
-Layer 1 foundation and domain data models are implemented with Pydantic. The
-current scope contains validated entities, explicit verification states, source
-provenance, and relationship validation only.
+Layer 1 foundation/domain models and the Layer 2 historical results layer are
+implemented with Pydantic. The current scope contains validated entities,
+explicit verification states, source provenance, deterministic swim-time
+normalization, and persistence-independent historical-result ingestion.
 
-Later layers, including ingestion, monitoring, translation, APIs, persistence,
-and analytics, are not implemented.
+Historical analytics, source parsing, monitoring, translation, external APIs,
+production persistence, and explanation generation are not implemented.
