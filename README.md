@@ -6,13 +6,14 @@ An AI system for connecting athlete performance data, competition information, o
 
 ## Current implementation
 
-Layers 1–4 are implemented: the Pydantic foundation/domain models, historical
-results, deterministic historical performance analytics, and the parsing and
-translation foundation. The current scope contains validated entities, explicit
-verification states, source provenance, swim-time normalization,
-persistence-independent historical-result ingestion, read-only performance
-analytics, and deterministic processing of existing text and structured input.
+Layers 1–5 are implemented: the Pydantic foundation/domain models, historical
+results, deterministic historical performance analytics, the parsing and
+translation foundation, and deterministic Context Linking. The current scope
+contains validated entities, explicit verification states, source provenance,
+swim-time normalization, persistence-independent historical-result ingestion,
+read-only performance analytics, deterministic input processing, and exact
+linking of explicit references to known entities.
 
-Real PDF, OCR, and HTML parsing; live translation; monitoring; context linking;
-external APIs; production persistence; competition lifecycle automation; and
-explanation or coaching generation are not implemented.
+Real PDF, OCR, and HTML parsing; live translation; monitoring; external APIs;
+production persistence; competition lifecycle automation; and explanation or
+coaching generation are not implemented.
