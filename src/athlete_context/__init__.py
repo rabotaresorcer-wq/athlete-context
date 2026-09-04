@@ -1,5 +1,16 @@
 """Athlete Context domain foundation."""
 
+from athlete_context.analytics import (
+    ConsistencyResult,
+    ConsistencyStatus,
+    HistoricalPbDelta,
+    HistoricalPerformanceAnalytics,
+    PerformanceDelta,
+    ProgressionPoint,
+    StandardGap,
+    TrendResult,
+    TrendStatus,
+)
 from athlete_context.domain import (
     Athlete,
     Competition,
@@ -39,6 +50,8 @@ from athlete_context.services import (
 
 __all__ = [
     "Athlete",
+    "ConsistencyResult",
+    "ConsistencyStatus",
     "Competition",
     "Document",
     "DocumentType",
@@ -47,12 +60,16 @@ __all__ = [
     "HistoricalResult",
     "HistoricalResultIngestService",
     "HistoricalResultStatus",
+    "HistoricalPbDelta",
+    "HistoricalPerformanceAnalytics",
     "InMemoryHistoricalResultRepository",
     "IngestOutcome",
     "IngestOutcomeStatus",
     "Message",
     "MessageDirection",
+    "PerformanceDelta",
     "ProfessionalFeedback",
+    "ProgressionPoint",
     "PoolLength",
     "Result",
     "ResultStatus",
@@ -63,10 +80,13 @@ __all__ = [
     "SourceType",
     "Split",
     "Standard",
+    "StandardGap",
     "StandardStatus",
     "Stroke",
     "StructuredHistoricalResultInput",
     "StructuredSplitInput",
+    "TrendResult",
+    "TrendStatus",
     "VerificationStatus",
     "format_swim_time",
     "parse_swim_time",
