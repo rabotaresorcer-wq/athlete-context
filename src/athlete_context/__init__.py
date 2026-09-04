@@ -68,6 +68,18 @@ from athlete_context.domain import (
     format_swim_time,
     parse_swim_time,
 )
+from athlete_context.explanation import (
+    AnalyticsExplanationContext,
+    CompetitionExplanationContext,
+    ExplanationContext,
+    ExplanationResult,
+    ExplanationService,
+    ExplanationSourceReference,
+    ExplanationStatus,
+    ExplanationType,
+    SupportingFact,
+    generate_explanation,
+)
 from athlete_context.input_processing import (
     ContentType,
     DeterministicTranslator,
@@ -89,6 +101,7 @@ from athlete_context.services import (
 )
 
 __all__ = [
+    "AnalyticsExplanationContext",
     "Athlete",
     "ConsistencyResult",
     "ConsistencyStatus",
@@ -96,6 +109,7 @@ __all__ = [
     "ContextLinkResult",
     "ContextLinkingService",
     "Competition",
+    "CompetitionExplanationContext",
     "CompetitionLifecycleStatus",
     "CompetitionMonitoringPlan",
     "CompetitionMonitoringStatus",
@@ -105,6 +119,12 @@ __all__ = [
     "EntityType",
     "Event",
     "ExactReference",
+    "ExplanationContext",
+    "ExplanationResult",
+    "ExplanationService",
+    "ExplanationSourceReference",
+    "ExplanationStatus",
+    "ExplanationType",
     "FederationUpdate",
     "FederationUpdateType",
     "HistoricalResult",
@@ -149,6 +169,7 @@ __all__ = [
     "Stroke",
     "StructuredHistoricalResultInput",
     "StructuredSplitInput",
+    "SupportingFact",
     "TrendResult",
     "TrendStatus",
     "TranslationStatus",
@@ -159,6 +180,7 @@ __all__ = [
     "create_monitoring_plan",
     "detect_language",
     "format_swim_time",
+    "generate_explanation",
     "get_due_checks",
     "link_context",
     "parse_swim_time",
