@@ -17,3 +17,14 @@ Autonomous competition selection, real PDF/OCR/HTML parsing, live translation,
 continuous federation crawling, TYF integration, external APIs, production
 persistence, background scheduling, coaching recommendations, and production
 deployment are not implemented.
+
+## Demo
+
+A deterministic, synthetic end-to-end demo connects the implemented Layers 1–7
+without external services or real athlete data. Run it from the repository root:
+
+```bash
+.venv/bin/python examples/demo_end_to_end.py
+```
+
+The scenario is documented in [docs/demo-scenario.md](docs/demo-scenario.md).
