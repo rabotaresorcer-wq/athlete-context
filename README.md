@@ -1,30 +1,147 @@
 # Athlete Context
 
-## AI Athlete Performance & Career Agent
+Athlete Context — это MVP для сборки проверяемого контекста вокруг спортсмена:
+исходные сообщения, структурированные результаты, официальные источники,
+историческая динамика и статус утверждённого соревнования соединяются в одну
+нейтральную, прослеживаемую картину.
 
-An AI system for connecting athlete performance data, competition information, official results and historical analytics into one verified context.
+Система не заменяет тренера, не выбирает соревнования и не даёт спортивные
+рекомендации. Она помогает не потерять источник факта, статус проверки,
+языковой оригинал и границы сопоставимости результатов.
 
-## Current implementation
+## Реальная задача
 
-Layers 1–7 are implemented: the Pydantic foundation/domain models, historical
-results, deterministic historical performance analytics, the parsing and
-translation foundation, Context Linking, and the approved-competition lifecycle
-and federation-monitoring foundation. The deterministic Explanation Layer now
-formats verified and linked context into traceable, neutral Russian or English
-summaries without generating advice.
+Вокруг спортсмена обычно есть разрозненные данные: сообщения на русском,
+турецком или английском языке, официальные протоколы, ручные записи,
+исторические результаты и обновления по соревнованиям. Без явной модели легко
+смешать подтверждённые и неподтверждённые факты, сравнить SCM 25 м с LCM 50 м
+или принять неподтверждённое сообщение за официальный результат.
 
-Autonomous competition selection, real PDF/OCR/HTML parsing, live translation,
-continuous federation crawling, TYF integration, external APIs, production
-persistence, background scheduling, coaching recommendations, and production
-deployment are not implemented.
+Athlete Context решает эту проблему в рамках MVP: сохраняет исходный материал,
+нормализует уже доступные структурированные данные, связывает их только по
+точным ссылкам, рассчитывает простую историческую аналитику и формирует
+русскоязычное объяснение с provenance.
 
-## Demo
+## Что приходит на вход
 
-A deterministic, synthetic end-to-end demo connects the implemented Layers 1–7
-without external services or real athlete data. Run it from the repository root:
+- исходный текст сообщения или документа;
+- уже структурированные данные результата;
+- известные сущности спортсмена, соревнования и события;
+- источник факта с типом, языком, временем фиксации и статусом проверки;
+- явно утверждённое командой соревнование для мониторинга;
+- синтетические federation update записи, переданные в систему явно.
+
+MVP не извлекает данные из PDF, OCR, HTML или внешних API. Вход считается уже
+доступным как текст или структура.
+
+## Что делает система
+
+- сохраняет оригинальный RU/TR/EN текст и, если есть локальный детерминированный
+  перевод, хранит русский перевод отдельно как производный материал;
+- не повышает verification status через перевод или Context Linking;
+- принимает только уже структурированные плавательные результаты;
+- разделяет SCM 25 м и LCM 50 м в идентичности результата и аналитике;
+- исключает неподходящие, конфликтные, неподтверждённые и нефинишные результаты
+  из PB, progression, trend и standard gap;
+- связывает контекст только по точным ID или заранее известным reference;
+- ведёт lifecycle только для явно утверждённого соревнования;
+- формирует нейтральные объяснения на русском языке по умолчанию.
+
+## Что получает пользователь
+
+Пользователь получает краткое объяснение фактов: что известно, из какого
+источника это пришло, подтверждено ли это, какие элементы остаются
+неразрешёнными и почему результат считается сопоставимым или несопоставимым.
+
+Если входной текст был не на русском, оригинал сохраняется отдельно от русского
+перевода. Перевод не становится новым источником истины.
+
+## Архитектура MVP
+
+- Layer 1: базовые Pydantic-модели домена, provenance и verification status.
+- Layer 2: ingest уже структурированных исторических результатов по плаванию.
+- Layer 3: read-only аналитика результатов: PB, progression, delta, trend,
+  consistency и standard gap.
+- Layer 4: обработка входов, определение языка и локальная deterministic
+  translation boundary.
+- Layer 5: Context Linking по точным ссылкам без угадывания и без верификации.
+- Layer 6: lifecycle и monitoring plan для явно утверждённого соревнования.
+- Layer 7: русскоязычные и англоязычные объяснения без советов и прогнозов.
+
+## End-to-end demo
+
+Демо в `examples/demo_end_to_end.py` использует только синтетические данные и
+локальную память. Оно показывает один полный проход:
+
+1. турецкое сообщение сохраняется как оригинал;
+2. локальный deterministic translator создаёт отдельный русский перевод;
+3. Context Linking связывает известные ID, но оставляет статус `UNVERIFIED`;
+4. официальный LCM 50 м результат ingest-ится с verified provenance;
+5. аналитика сравнивает только сопоставимые LCM результаты и исключает SCM;
+6. утверждённое соревнование закрывается только после verified result update,
+   verified historical result и linked context;
+7. пользователь получает русское объяснение с источниками.
+
+Запуск demo:
 
 ```bash
 .venv/bin/python examples/demo_end_to_end.py
 ```
 
-The scenario is documented in [docs/demo-scenario.md](docs/demo-scenario.md).
+## Язык
+
+Русский — основной пользовательский язык. `generate_explanation()` по умолчанию
+возвращает русский результат.
+
+Для входов на русском, турецком и английском система сохраняет исходный текст.
+Если перевод доступен, он хранится отдельно в `translated_text`; если перевод
+недоступен или не удался, исходный текст остаётся неизменным, а статус перевода
+остаётся явным.
+
+## Verification и provenance
+
+Verification status не повышается автоматически:
+
+- перевод не подтверждает факт;
+- Context Linking не подтверждает факт;
+- professional feedback не становится verified результатом;
+- conflict, unknown и unresolved состояния остаются явными;
+- verified official result сохраняет source IDs и source provenance.
+
+Официальный факт может быть показан как подтверждённый только когда сам факт,
+его источник и связанный контекст проходят соответствующие проверки слоя.
+
+## Граница соревнований
+
+Соревнование должно быть явно утверждено вне Athlete Context, например тренером
+или командой спортсмена. MVP не выбирает соревнования автономно и не рекомендует
+план участия.
+
+Monitoring plan создаётся только для `PlannedCompetition(approved=True)` и
+остаётся scoped к одному competition ID. Отмена, конфликт или неизвестные даты
+не должны создавать выдуманное завершение или результат.
+
+## Что намеренно не реализовано
+
+- TYF live integration;
+- web crawling;
+- PDF/OCR;
+- внешние translation API;
+- database/persistence;
+- scheduler/background jobs;
+- UI;
+- authentication;
+- deployment;
+- coaching logic;
+- competition recommendation;
+- production readiness.
+
+## Тесты
+
+Полный набор тестов:
+
+```bash
+.venv/bin/python -m pytest
+```
+
+Текущий MVP ожидает полностью локальный запуск без внешних сервисов.
