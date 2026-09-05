@@ -93,6 +93,11 @@ from athlete_context.input_processing import (
     detect_language,
     process_input,
 )
+from athlete_context.imports import (
+    OfficialResultImport,
+    OfficialResultImportMapping,
+    OfficialResultImportService,
+)
 from athlete_context.services import (
     HistoricalResultIngestService,
     InMemoryHistoricalResultRepository,
@@ -148,6 +153,9 @@ __all__ = [
     "MonitoringPhase",
     "MonitoringPolicy",
     "NormalizedInput",
+    "OfficialResultImport",
+    "OfficialResultImportMapping",
+    "OfficialResultImportService",
     "PerformanceDelta",
     "ProfessionalFeedback",
     "ProgressionPoint",

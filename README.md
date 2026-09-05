@@ -68,6 +68,10 @@ MVP не извлекает данные из PDF, OCR, HTML или внешни
 - Layer 6: lifecycle и monitoring plan для явно утверждённого соревнования.
 - Layer 7: русскоязычные и англоязычные объяснения без советов и прогнозов.
 
+Дополнительно в v0.2 начат узкий import boundary для уже извлечённых
+структурированных official swimming results. Он документирован в
+`docs/real-result-import.md` и передаёт данные в существующий Layer 2 ingest.
+
 ## End-to-end demo
 
 Демо в `examples/demo_end_to_end.py` использует только синтетические данные и
