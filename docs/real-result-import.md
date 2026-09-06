@@ -56,3 +56,46 @@ capture time сохраняются в `Source`. Существующие source
 Все committed tests и examples должны оставаться synthetic. Нельзя коммитить
 реальные имена спортсменов, даты рождения, приватные сообщения, screenshots,
 PDFs, source dumps, credentials, personal access tokens или `.env` files.
+
+## Controlled local run
+
+Для локальной проверки с реальным уже структурированным результатом пользователь
+сам создаёт JSON-файл внутри ignored директории:
+
+```text
+data/private/
+```
+
+В репозитории есть только synthetic template:
+
+```text
+examples/private_result_template.json.example
+```
+
+Его можно использовать как схему-подсказку, но реальные значения должны
+оставаться только в `data/private/` и не должны попадать в Git.
+
+Локальный запуск:
+
+```bash
+.venv/bin/python examples/run_private_result.py data/private/result.json
+```
+
+Runner делает только controlled local flow:
+
+```text
+private structured JSON
+-> OfficialResultImport validation
+-> OfficialResultImportService mapping
+-> HistoricalResultIngestService
+-> HistoricalPerformanceAnalytics
+-> ExplanationService
+-> concise Russian summary
+```
+
+Runner не обращается к live external services, не запускает TYF integration, не
+scraping, не OCR, не переводит текст и не пишет derived private data в
+репозиторий. По умолчанию он печатает только минимальный русский summary:
+ingest status, generated result ID, verification status, pool length, размер
+локальной analytics progression и explanation note. Полный private payload,
+source dump, даты рождения, raw messages и arbitrary metadata не печатаются.
