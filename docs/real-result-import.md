@@ -99,3 +99,28 @@ scraping, не OCR, не переводит текст и не пишет derive
 ingest status, generated result ID, verification status, pool length, размер
 локальной analytics progression и explanation note. Полный private payload,
 source dump, даты рождения, raw messages и arbitrary metadata не печатаются.
+
+## Controlled local history run
+
+Для проверки нескольких уже структурированных результатов в одном локальном
+in-memory repository пользователь создаёт private history JSON внутри
+`data/private/`. В репозитории есть только synthetic template:
+
+```text
+examples/private_history_template.json.example
+```
+
+Локальный запуск:
+
+```bash
+.venv/bin/python examples/run_private_history.py data/private/history.json
+```
+
+Файл должен быть JSON object с непустым массивом `results`, где каждый элемент
+валидируется как `OfficialResultImport`. Runner импортирует все элементы через
+существующий Layer 2 ingest, затем использует `HistoricalPerformanceAnalytics`
+для группировки по дисциплинам и `ExplanationService` для русских итогов.
+
+Отчёт не печатает полный private payload, source dumps или произвольные
+персональные metadata. Внешние сервисы, crawling, OCR, перевод, база данных и
+запись derived private data в репозиторий не используются.
