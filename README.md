@@ -96,6 +96,35 @@ MVP не извлекает данные из PDF, OCR, HTML или внешни
 .venv/bin/python examples/demo_end_to_end.py
 ```
 
+## Local analytics agent
+
+Локальный analytics-agent запускает private history JSON из `data/private/`,
+строит русскоязычный аналитический отчёт и сохраняет его в
+`data/private/reports/latest-analytics.md`. Директория `data/private/`
+игнорируется Git, поэтому реальные результаты и отчёты не попадают в публичный
+репозиторий.
+
+Первый private history файл можно собрать по примеру:
+
+```bash
+cp examples/private_history_template.json.example data/private/history.json
+```
+
+Запуск агента:
+
+```bash
+.venv/bin/python examples/athlete_analytics_agent.py --print
+```
+
+По умолчанию агент читает `data/private/history.json`. Для другого локального
+файла внутри `data/private/`:
+
+```bash
+.venv/bin/python examples/athlete_analytics_agent.py \
+  --input data/private/history.json \
+  --output data/private/reports/latest-analytics.md
+```
+
 ## Язык
 
 Русский — основной пользовательский язык. `generate_explanation()` по умолчанию
